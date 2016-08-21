@@ -1,0 +1,50 @@
+\documentclass[a4paper]{article}
+
+\usepackage{color}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{tikz}
+\usepackage[]{algorithm,algpseudocode}
+
+\usepackage[hmargin=3cm,vmargin=3.5cm]{geometry}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem*{definition*}{Definition}
+
+\begin{document}
+
+\section{Introduction}
+
+\section{Background}
+
+\section{Algorithm}
+This section describes an algorithm to calculate the Weiner index of a Hamming graph. The algorithm can be separated into two components:
+\begin{enumerate}
+\item Find the elementary cuts;
+\item Count the number of vertices on either side of all the cuts.
+\end{enumerate}
+
+The first of these can be achieved by the following algorithm.
+
+\begin{algorithm}
+  \caption{Elementary Cut Finding Algorithm}\label{euclid}
+  \begin{algorithmic}[1]
+      \For{all edges in $G$}
+      	\State Create a \emph{centre} on each adjacent face.
+      	\State Create an edge from the centre to the current edge.
+      	\State Increment a counter on the centre by one, to keep track of the degree of each centre.
+      \EndFor
+      \For{all boundary edges}
+      	\State Create a \emph{cut} by tracing the unique path from edge to centre to the opposite edge, until another boundary edge is reached.
+      \EndFor
+  \end{algorithmic}
+\end{algorithm}
+
+
+\end{document}
+
+TODO:
+
+ - Define opposte edge
