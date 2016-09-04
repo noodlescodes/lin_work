@@ -1,50 +1,190 @@
-\documentclass[a4paper]{article}
+\documentclass[11pt,a4paper]{article}
+%\documentclass[12pt,a4paper,draft]{article}
 
-\usepackage{color}
-\usepackage{listings}
-\usepackage{amsmath}
-\usepackage{amsthm}
-\usepackage{tikz}
+\usepackage{graphicx, amssymb, amsmath, amsthm, amsfonts, amsbsy, color, textcomp}
+\usepackage[it,hang]{caption}
+\usepackage{verbatim}
+
 \usepackage[]{algorithm,algpseudocode}
+ 
+\usepackage{pdfsync}
 
-\usepackage[hmargin=3cm,vmargin=3.5cm]{geometry}
+\usepackage{hyperref}
+
+\hypersetup{
+     a4paper, % page format
+     pdftitle={Combinatorics of Pavings and Paths},                  % Title
+     pdfsubject={Subject of the document}, % Subject
+     pdfauthor={Judy-anne Osborn},              % Author
+     pdfkeywords={combinatorics},       % Keywords
+     plainpages=false, %
+     colorlinks,       % links are colored
+     urlcolor=blue,    % color of external links
+     linkcolor=black,    % color of internal links
+     citecolor=black,  % color of links to bibliography
+     bookmarksnumbered
+}
+ 
 
 \newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{example}{Example}
 \newtheorem{definition}{Definition}
-\newtheorem*{definition*}{Definition}
 
+%
+%==================================================================================================
+%
 \begin{document}
+%
+%==================================================================================================
+%
 
-\section{Introduction}
+\title{Efficient computation of the Weiner Index for a class of planar graphs}
+\author{Yuqing Lin and Nathan Van Maastricht\\
+\, \\
+University of Newcastle\\
+University Drive Callaghan\\
+NSW 2308, Australia\\
+}
+\date{}
 
-\section{Background}
+\maketitle
 
-\section{Algorithm}
-This section describes an algorithm to calculate the Weiner index of a Hamming graph. The algorithm can be separated into two components:
+\begin{abstract}
+	WRITTEN LAST.  Computation of the Weiner Index for a graph on $n$ vertices,  using the definition, is of order $n^2$.   We give an algorithm that applies to a certain class of planar graphs, which is of smaller order.
+\end{abstract}
+
+%\textsc{Keywords: }  Lattice Path, Dyck Path, Banded Path, Bi-banded Path, Peaks, Valleys, Corners, Bijection, Narayana Numbers, TASEP.
+
+%================================================
+\section{Introduction} 
+%================================================
+
+
+The Weiner Index is an important metric in chemical graph theory as it closely correlates with the boilings points of alkane molecules, along with many other parameters of the molecule, such as density, surface tension and viscosity of its liquid phase \cite{R1976}. Direct computation of the Weiner index from the definition, for a graph with n vertices, is of the order $O(nm)$, where $n$ is the number of vertices and $m$ is the number of edges in the graph.  It is of practical and theoretical interest to find a more efficient algorithm for computing the Weiner index.
+
+We consider a certain class of planar graphs, called partial cubes, the definition is well known, see for example \cite{K2015}, but will be reviewed in section \ref{sec:definitions}. In section \ref{sec:algorithm} we introduce an algorithm using cut methods to calculate the Weiner Index in linear time for this class of graphs.
+
+
+
+%comprised of even cycles each of which becomes a convex face in a straight line embedding  in the square lattice. INCOMPLETE .... INSERT DEFN  For this class of graphs, we give an algorithm for computing the Weiner index which is of complexity �. .This work extends an earlier result of � on Archmedian tilings.
+
+
+%%%%%%%%%%%%%%%%%%%%%%
+\section{Definitions} \label{sec:definitions}
+
+Before we talk about the algorithm, we need to introduce and recall some definitions. We need to talk about the class of graphs we are working with, and some terms used.
+
+Of course, the most important thing to introduce is the Weiner Index itself. In 1971, Hosoya extended the original definition of the Weiner Index from trees to all connected Graphs $G$ by the following definition\cite{H1971}.
+
+\begin{definition}
+The Weiner Index of a graph, $G$, is given by $$W(G)=\sum_{\{u,v\}\in V(G)}d_G(u,v).$$
+\end{definition}
+
+\begin{definition}\cite{K2015}
+Let $G$ be a connected graph, then $G$ is a {\bf partial cube} if its vertices $u$ can be labeled with binary strings $\l(u)$ of a fixed length, such that $$d_G(u, v)=H(l(u),l(v))$$ holds for any vertices $u$ and $v$ of $G$, where $H(l(u), l(v))$ is the Hamming distance of the binary strings $l(u)$ and $l(v)$.
+\end{definition}
+
+This is the class of graphs we will be talking about for the rest of this paper.
+
+We now need to introduce an \emph{elementary cut}, which is a key component of the algorithm.
+
+\begin{definition}
+Let $G=(V, E)$ be a simple connected planar graph, all of whose cycles are of even length, which we assume to be embedded in the plane.  An {\bf elementary cut} is a sequence
+$$
+e_1F_1e_2F_2 \cdots e_kF_ke_{k+1}
+$$
+such that
+\begin{itemize}
+\item Each $e_i$ is an edge in the graph
+\item Each $F_i$ is a face in the graph
+\item Edges $e_i$ and $e_{i+1}$ are antipodal edges belonging to the face $F_i$
+\item The first and last edges $e_1$ and $e_{k+1}$ lie on the boundary of the embedding.
+\end{itemize}
+\end{definition}
+
+It is a well known result (see \cite{K2015}) that the Weiner index can be calculated on partial cubes by the following theorem.
+
+\begin{theorem}
+Let $G$ be a partial cube and $C_i$ be an elementary cut. Let $n_1(C_i)$ and $n_2(C_i)$ be the number of vertices in the two connected components of $G-C_i$, that is, the graph created by taking the elementary cut $C_i$. Then $$W(G)=\sum_{i=1}^kn_1(C_i)n_2(C_i).$$
+\end{theorem}
+
+Cut methods have been used in the past to calculate the Weiner index of chemical graphs \cite{K1997}. We present a faster way to calculate the weiner index on a partial cube.
+
+%%%%%%%%
+\section{The Algorithm} \label{sec:algorithm}
+
+The algorithm can be seperated into two main components.
+
 \begin{enumerate}
 \item Find the elementary cuts;
 \item Count the number of vertices on either side of all the cuts.
 \end{enumerate}
 
-The first of these can be achieved by the following algorithm.
+The first of these can be achieved by algorithm \ref{alg:cuts}.
 
 \begin{algorithm}
-  \caption{Elementary Cut Finding Algorithm}\label{euclid}
+  \caption{Elementary Cut Finding Algorithm}\label{alg:cuts}
   \begin{algorithmic}[1]
       \For{all edges in $G$}
-      	\State Create a \emph{centre} on each adjacent face.
-      	\State Create an edge from the centre to the current edge.
-      	\State Increment a counter on the centre by one, to keep track of the degree of each centre.
+      	\State Join the edge to it's adjacent face.
+      	\State Increment a counter on the face by one, to keep track of the size of each cycle.
       \EndFor
       \For{all boundary edges}
-      	\State Create a \emph{cut} by tracing the unique path from edge to centre to the opposite edge, until another boundary edge is reached.
+      	\State Create a \emph{cut} by tracing the unique path from edge to face to the antipodal edge, until another boundary edge is reached.
       \EndFor
   \end{algorithmic}
 \end{algorithm}
 
+The second of these can be acheived by algorithm \ref{alg:count}.
 
+\begin{algorithm}
+	\caption{Counting Vertices}\label{alg:count}
+	\begin{algorithmic}[1]
+		\For{a}
+			\State b
+		\EndFor
+	\end{algorithmic}
+\end{algorithm}
+
+\section{Proof(s)} \label{sec:proof}
+
+Nathan, write stuff here
+
+Nathan, write stuff here
+
+%\begin{thebibliography}{10}
+%
+%\bibitem{}
+%
+%\bibitem{Bl} R. A. Blythe and M. R. Evans.  Nonequilibrium steady states of matrix-product form: a solver's guide.  J. Phys. A: Math. Theor. 40.  pp R333--R441.  2007. 
+%
+%\bibitem{BE} R. Brak and  J. W.  Essam. Walkers near a wall with periodic weight: application to ASEP with parallel update.  Preprint, 2010.
+%
+%
+%\bibitem{N1955} T. V. Narayana.  Sur les treillis form\'es par les partition d'un entier; leurs applications \`a la th\'eorie des probabilit\'es.  Comp. Rend. Acad. Sci. Paris.  240.  pp 1188--1189, 1955. 
+%
+%\bibitem{N1979} T. V. Narayana.  \emph{Lattice Path Combinatorics with Statistical Applications}.  University of Toronto Press.  1979.
+%
+%\bibitem{O} Judy-anne Osborn.  \emph{Combinatorics of Pavings and Paths}, PhD thesis, The University of Melbourne. 2007.
+
+%\end{thebibliography}
+
+
+\begin{thebibliography}{10}
+\bibitem{H1971} H. Hosoya. Topological index. A newly proposed quantity characterizing the topological nature of structural isomers of saturated hydrocarbons. Bull. Chem. Soc. Japan. 44. pp 2332--2339. 1971.
+
+\bibitem{K1997} S. Klav\v{z}ar and I. Gutman and A. Rajapaske. Wiener numbers of pericondensed benzenoid hydrocarbons. Croat. Chem. Inf. Comput. Sci. 70 pp 979--999. 1997.
+
+\bibitem{K2015} S. Klav\v{z}ar and M. J. Nadjafi-Arani. Cut Method: Update on Recent Developments and Equivalence of Independt Approaches. Current Organic Chemisty. 19. pp 348--358. 2015.
+
+\bibitem{F2010} Y. Pan and M. Xie and F. Zhang. Binary Hamming Graphs in Archimedean Tilings. 
+
+\bibitem{R1976} D. H. Rouvray and B. C. Crafford. The dependence of physical-chemical properties on topological factors. South African Journal of Science. 72. pp 47--51. 1976.
+
+\bibitem{W1947} H. Wiener. Structural determination of paraffin boiling points. JJ. Amer. Chem. Soc. 69. pp 17--20. 1947.
+\end{thebibliography}
 \end{document}
-
-TODO:
-
- - Define opposte edge
