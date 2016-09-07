@@ -81,23 +81,25 @@ Before we talk about the algorithm, we need to introduce and recall some definit
 Of course, the most important thing to introduce is the Weiner Index itself. In 1971, Hosoya extended the original definition of the Weiner Index from trees to all connected Graphs $G$ by the following definition\cite{H1971}.
 
 \begin{definition}
-The Weiner Index of a graph, $G$, is given by $$W(G)=\sum_{\{u,v\}\in V(G)}d_G(u,v).$$
+The Weiner Index of a graph, $G$, is given by $$W(G)=\sum_{u,v\in V(G)}d_G(u,v).$$
 \end{definition}
 
 \begin{definition}\cite{K2015}
 Let $G$ be a connected graph, then $G$ is a {\bf partial cube} if its vertices $u$ can be labeled with binary strings $\l(u)$ of a fixed length, such that $$d_G(u, v)=H(l(u),l(v))$$ holds for any vertices $u$ and $v$ of $G$, where $H(l(u), l(v))$ is the Hamming distance of the binary strings $l(u)$ and $l(v)$.
 \end{definition}
 
-This is the class of graphs we will be talking about for the rest of this paper.
+%The class of graphs we are going to apply our algorithm to is the planar partial cubes.
 
-We now need to introduce an \emph{elementary cut}, which is a key component of the algorithm.
+%We now need to introduce an \emph{elementary cut}, which is a key component of the algorithm.
+
+The class of graphs to which we are apply our algorithm is the set of planar partial cubes. The algorithm is an example of a \emph{cut method}, as described in \cite{K2015}. There is a general notion of an elementary cut, which applies to arbitary graphs and is defined in terms of a relation called the \emph{Djokov\'c-Winkler} relation. We give a restricted definition of an elementary cut, which applies to our graphs of interest, and is equivalent to the more general definiition when restricted to our set.
 
 \begin{definition}
-Let $G=(V, E)$ be a simple connected planar graph, all of whose cycles are of even length, which we assume to be embedded in the plane.  An {\bf elementary cut} is a sequence
+Let $G=(V, E)$ be a simple connected planar graph, all of whose cycles are of even length, which we assume to be embedded in the plane.  An {\bf elementary cut} is a set of edges $\{e_1,\ldots,e_k\}$ such that the alternating sequence of edges and faces:
 $$
-e_1F_1e_2F_2 \cdots e_kF_ke_{k+1}
+e_1F_1e_2F_2 \cdots e_{k-1}F_{k-1}e_k
 $$
-such that
+has the following properties:
 \begin{itemize}
 \item Each $e_i$ is an edge in the graph
 \item Each $F_i$ is a face in the graph
@@ -106,13 +108,13 @@ such that
 \end{itemize}
 \end{definition}
 
-It is a well known result (see \cite{K2015}) that the Weiner index can be calculated on partial cubes by the following theorem.
+It is a well known result (see \cite{K2015}) that the Weiner index can be calculated on planar partial cubes by the following theorem.
 
 \begin{theorem}
-Let $G$ be a partial cube and $C_i$ be an elementary cut. Let $n_1(C_i)$ and $n_2(C_i)$ be the number of vertices in the two connected components of $G-C_i$, that is, the graph created by taking the elementary cut $C_i$. Then $$W(G)=\sum_{i=1}^kn_1(C_i)n_2(C_i).$$
+Let $G$ be a planar partial cube and $C_i$ be an elementary cut. Let $n_1(C_i)$ and $n_2(C_i)$ be the number of vertices in the two connected components of $G-C_i$, that is, the graph created by removing from $G$ the edges in the elementary cut $C_i$. Then the sum over all elementary cuts $C_1,\ldots,C_k$ is the Weiner index: $$W(G)=\sum_{i=1}^kn_1(C_i)n_2(C_i).$$
 \end{theorem}
 
-Cut methods have been used in the past to calculate the Weiner index of chemical graphs \cite{K1997}. We present a faster way to calculate the weiner index on a partial cube.
+Cut methods have been used in the past to calculate the Weiner index of chemical graphs \cite{K1997}. We present a faster way to calculate the Weiner index on a planar partial cube.
 
 %%%%%%%%
 \section{The Algorithm} \label{sec:algorithm}
@@ -179,7 +181,7 @@ Nathan, write stuff here
 
 \bibitem{K1997} S. Klav\v{z}ar and I. Gutman and A. Rajapaske. Wiener numbers of pericondensed benzenoid hydrocarbons. Croat. Chem. Inf. Comput. Sci. 70 pp 979--999. 1997.
 
-\bibitem{K2015} S. Klav\v{z}ar and M. J. Nadjafi-Arani. Cut Method: Update on Recent Developments and Equivalence of Independt Approaches. Current Organic Chemisty. 19. pp 348--358. 2015.
+\bibitem{K2015} S. Klav\v{z}ar and M. J. Nadjafi-Arani. Cut Method: Update on Recent Developments and Equivalence of Independent Approaches. Current Organic Chemisty. 19. pp 348--358. 2015.
 
 \bibitem{F2010} Y. Pan and M. Xie and F. Zhang. Binary Hamming Graphs in Archimedean Tilings. 
 
